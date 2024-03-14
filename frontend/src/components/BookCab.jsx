@@ -6,7 +6,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import Select from "react-select";
 import dayjs from "dayjs";
-
+import { dijkastra } from "../utilities/dijkastra";
+import CabRecord from "./CabRecord";
 const BookCab = () => {
   const today = dayjs();
   const [timeValue, setTimeValue] = useState(null);
@@ -17,72 +18,28 @@ const BookCab = () => {
   const [userEmailValue, setUserEmailValue] = useState();
   const [routeTime, setRouteTime] = useState(0);
   const [routeCharge, setRouteCharge] = useState(0);
-  const [clickedAvailaibleButton, setClickedAvailaibleButton] = useState(false);
+  const [clickedAvailableButton, setClickedAvailableButton] = useState(false);
   const [humanReadableDate, setHumanReadableDate] = useState();
   const [humanReadableTime, setHumanReadableTime] = useState();
   const [cabAvailaible, setCabAvailaible] = useState(false);
-
-  //dijkastra algo for shortest path
-  //dijkastra algo for shortest path
-  //dijkastra algo for shortest path
-  //dijkastra algo for shortest path
-  //dijkastra algo for shortest path
-  const graph = {
-    A: { B: 5, C: 7 },
-    B: { A: 5, E: 20, D: 15 },
-    C: { A: 7, E: 35, D: 5 },
-    D: { B: 15, C: 5, F: 20 },
-    E: { B: 20, C: 35, F: 10 },
-    F: { D: 20, E: 10 },
-  };
-
-  const dijkastra = (graph, start, end) => {
-    let distances = {};
-    let allNodes = Object.keys(graph);
-    for (let node of allNodes) {
-      distances[node] = 100000;
-    }
-    distances[start] = 0;
-    let pq = [{ [start]: 0 }];
-    while (pq.length > 0) {
-      pq.sort((a, b) => {
-        let value1 = Object.values(a)[0];
-        let value2 = Object.values(b)[0];
-        return value1 - value2;
-      });
-      let num = pq.shift();
-
-      if (Object.keys(num)[0] === end) {
-        return Object.values(num)[0];
-      }
-      num = Object.keys(num)[0];
-      for (let child in graph[num]) {
-        let newDist = distances[num] + graph[num][child];
-        if (newDist < distances[child]) {
-          distances[child] = distances[num] + graph[num][child];
-          pq.push({ [child]: distances[child] });
-        }
-      }
-    }
-    return -1;
-  };
-
+  const [loading, setLoading] = useState(false);
+  const [isCabBooked, setIsCabBooked] = useState(false);
   //details for booking
   //details for booking
   //details for booking
   //details for booking
 
   const handleSourceChange = (value) => {
-    setClickedAvailaibleButton(false);
+    setClickedAvailableButton(false);
     setSourceValue(value);
   };
   const handleDestinationChange = (value) => {
-    setClickedAvailaibleButton(false);
+    setClickedAvailableButton(false);
 
     setDestinationValue(value);
   };
   const handleCabTypeChange = (value) => {
-    setClickedAvailaibleButton(false);
+    setClickedAvailableButton(false);
     setCabTypeValue(value);
   };
 
@@ -107,11 +64,11 @@ const BookCab = () => {
     { label: "Destination - F" },
   ];
   const cabTypeOptions = [
-    { label: "Sedan (Fair - 100/minute)", value: 0, charge: 100 },
-    { label: "SUV (Fair - 120/minute)", value: 1, charge: 120 },
-    { label: "Van (Fair - 140/minute)", value: 2, charge: 140 },
-    { label: "HatchBack (Fair - 80/minute)", value: 4, charge: 80 },
-    { label: "Coupe (Fair - 200/minute)", value: 5, charge: 200 },
+    { label: "Sedan (Fair - 100/minute)", value: "0", charge: 100 },
+    { label: "SUV (Fair - 120/minute)", value: "1", charge: 120 },
+    { label: "Van (Fair - 140/minute)", value: "2", charge: 140 },
+    { label: "HatchBack (Fair - 80/minute)", value: "4", charge: 80 },
+    { label: "Coupe (Fair - 200/minute)", value: "5", charge: 200 },
   ];
   const validateEmail = (email) => {
     // Regular expression for email validation
@@ -124,8 +81,7 @@ const BookCab = () => {
     validateDateValue,
     validateSourceValue,
     validateDestinationValue,
-    validateCabTypeValue,
-    validateUserEmailValue
+    validateCabTypeValue
   ) => {
     if (!validateTimeValue) {
       alert("Please select suitable time");
@@ -147,11 +103,27 @@ const BookCab = () => {
       alert("Please select suitable cabType");
       return false;
     }
-    if (!validateEmail(validateUserEmailValue)) {
-      alert("Please enter suitable email");
-      return false;
-    }
+
     return true;
+  };
+
+  //find end time
+  //find end time
+  //find end time
+  //find end time
+
+  const findEndTime = (startTime, val) => {
+    const [hours, minutes] = startTime.split(":");
+    const parsedHour = parseInt(hours);
+    const parsedMinutes = parseInt(minutes);
+
+    const totalMinutes = parsedHour * 60 + parsedMinutes + val;
+
+    const endTimeHour = Math.floor(totalMinutes / 60) % 24;
+    const endTimeMinute = totalMinutes % 60;
+    const amPm = endTimeHour >= 12 ? "PM" : "AM";
+    const newTime = endTimeHour + ":" + endTimeMinute + " " + amPm;
+    return newTime;
   };
 
   // booking buttons
@@ -159,39 +131,137 @@ const BookCab = () => {
   // booking buttons
   // booking buttons
 
-  const checkAvailaibility = () => {
+  const checkAvailability = () => {
+    setLoading(true);
     const validationPassed = validate(
       timeValue,
       dateValue,
       sourceValue,
       destinationValue,
-      cabTypeValue,
-      userEmailValue
+      cabTypeValue
     );
 
     if (!validationPassed) return false;
 
     let val = dijkastra(
-      graph,
       sourceValue.label.substring(sourceValue.label.length - 1),
       destinationValue.label.substring(destinationValue.label.length - 1)
     );
     let date = "";
-    date = dateValue.$D + "-" + (dateValue.$M + 1) + "-" + dateValue.$y;
-    let time = "";
-    time = timeValue.$H + ":" + timeValue.$m;
+    date = dateValue.$M + 1 + "-" + dateValue.$D + "-" + dateValue.$y;
+    let startTime = "";
+    startTime =
+      timeValue.$H +
+      ":" +
+      timeValue.$m +
+      " " +
+      (timeValue.$H >= 12 ? "PM" : "AM");
 
-    setHumanReadableDate(date);
-    setHumanReadableTime(time);
-    setRouteTime(val);
-    setRouteCharge(val * cabTypeValue.charge);
-    setClickedAvailaibleButton(true);
+    let endTime = findEndTime(startTime, val);
+
+    const bodyData = {
+      cabType: cabTypeValue,
+      pickUpDate: date,
+      pickUpStartTime: startTime.substring(0, startTime.length - 3),
+      pickUpEndTime: endTime.substring(0, endTime.length - 3),
+    };
+
+    fetch("http://localhost:4500/check/availability", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bodyData),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          return res.json().then((data) => {
+            throw new Error(
+              `HTTP error! Status: ${res.status}, Message: ${data.message}`
+            );
+          });
+        }
+        return res.json();
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log("Response from check availability", response);
+        setHumanReadableDate(date);
+        setHumanReadableTime(startTime);
+        setCabAvailaible(true);
+        setRouteTime(val);
+        setRouteCharge(val * cabTypeValue.charge);
+        setClickedAvailableButton(true);
+        setIsCabBooked(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setIsCabBooked(false);
+        setClickedAvailableButton(true);
+        setCabAvailaible(false);
+        console.log("Cab is not available", err.message);
+      });
   };
   const bookCab = () => {
-    if (clickedAvailaibleButton) {
-    } else {
-      checkAvailaibility();
+    if (!clickedAvailableButton) return false;
+    if (!userEmailValue || !validateEmail(userEmailValue)) {
+      alert("Please enter suitable email");
+      return false;
     }
+    let val = dijkastra(
+      sourceValue.label.substring(sourceValue.label.length - 1),
+      destinationValue.label.substring(destinationValue.label.length - 1)
+    );
+    let date = "";
+    date = dateValue.$M + 1 + "-" + dateValue.$D + "-" + dateValue.$y;
+    let startTime = "";
+    startTime =
+      timeValue.$H +
+      ":" +
+      timeValue.$m +
+      " " +
+      (timeValue.$H >= 12 ? "PM" : "AM");
+
+    let endTime = findEndTime(startTime, val);
+
+    const bodyData = {
+      cabType: cabTypeValue,
+      pickUpDate: date,
+      pickUpStartTime: startTime.substring(0, startTime.length - 3),
+      pickUpEndTime: endTime.substring(0, endTime.length - 3),
+      userEmail: userEmailValue,
+      source: sourceValue.label.substring(sourceValue.label.length - 1),
+      destination: destinationValue.label.substring(
+        destinationValue.label.length - 1
+      ),
+    };
+    // console.log(bodyData);
+
+    fetch("http://localhost:4500/cab/book", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bodyData),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          return res.json().then((data) => {
+            throw new Error(
+              `HTTP error! Status: ${res.status}, Message: ${data.message}`
+            );
+          });
+        }
+        return res.json();
+      })
+      .then((response) => {
+        setIsCabBooked(true);
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log("Some error occurred while booking the cab", err);
+        setIsCabBooked(false);
+      });
   };
   return (
     <div id="cab_book_container">
@@ -254,7 +324,7 @@ const BookCab = () => {
                   value={dateValue}
                   minDate={today}
                   onChange={(newValue) => {
-                    setClickedAvailaibleButton(false);
+                    setClickedAvailableButton(false);
                     setDateValue(newValue);
                   }}
                 />
@@ -265,7 +335,7 @@ const BookCab = () => {
                 <TimePicker
                   value={timeValue}
                   onChange={(newValue) => {
-                    setClickedAvailaibleButton(false);
+                    setClickedAvailableButton(false);
                     setTimeValue(newValue);
                   }}
                   // label="Select Pickup Time"
@@ -295,49 +365,131 @@ const BookCab = () => {
         <div id="cab_book_container_bookingDetails_first">
           <div
             id="cab_book_container_bookingDetails_checkAvailaibility"
-            onClick={checkAvailaibility}
+            onClick={checkAvailability}
           >
-            Check availaiblity and Charges
+            Check availablity and Charges
           </div>
-          <div id="cab_book_container_bookingDetails_bookCab" onClick={bookCab}>
+          <div
+            id="cab_book_container_bookingDetails_bookCab"
+            title={
+              clickedAvailableButton
+                ? "Book Your cab"
+                : "Please check availability first"
+            }
+            style={{
+              cursor: clickedAvailableButton ? "pointer" : "not-allowed",
+            }}
+            className={clickedAvailableButton ? "hover-shadow" : ""}
+            onClick={bookCab}
+          >
             Book Cab
           </div>
         </div>
         <div id="cab_book_container_bookingDetails_second">
-          {clickedAvailaibleButton ? (
-            <div id="cab_book_container_bookingDetails_showBox">
-              <div id="cab_book_container_bookingDetails_showBox_signal">
-                {cabAvailaible
-                  ? "Availaible"
-                  : "Sorry Cab is Not Availaible  , Try changing cab type or pickup time"}
+          {!loading ? (
+            clickedAvailableButton ? (
+              <div id="cab_book_container_bookingDetails_showBox">
+                <div id="cab_book_container_bookingDetails_showBox_signal">
+                  {isCabBooked
+                    ? "Success , Cab got booked for you"
+                    : cabAvailaible
+                    ? "Availaible"
+                    : "Not Available"}
+                </div>
+                {cabAvailaible ? (
+                  <>
+                    <div id="cab_book_container_bookingDetails_showBox_title">
+                      Here are the Cab details
+                    </div>
+                    <div id="cab_book_container_bookingDetails_showBox_details">
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_source"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}>Source -</span>
+                        {sourceValue.label.substring(
+                          sourceValue.label.length - 1
+                        )}
+                      </div>
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_destination"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}>
+                          Destination -{" "}
+                        </span>{" "}
+                        {destinationValue.label.substring(
+                          destinationValue.label.length - 1
+                        )}
+                      </div>
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_cabType"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}>CabType -</span>{" "}
+                        {cabTypeValue.label}
+                      </div>
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_date"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}> PickUp Date </span>
+                        {dateValue.$D +
+                          "-" +
+                          dateValue.$M +
+                          1 +
+                          "-" +
+                          dateValue.$y}
+                      </div>
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_time"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}>PickUp Time</span>{" "}
+                        {humanReadableTime}
+                      </div>
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_routeTime"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}>
+                          {" "}
+                          Estimated time to reach destination
+                        </span>{" "}
+                        {routeTime} minutes
+                      </div>
+                      <div
+                        id="cab_book_container_bookingDetails_showBox_details_charge"
+                        className="bookingDetails_details_class"
+                      >
+                        <span style={{ fontWeight: "700" }}>
+                          Fair for Cab(in rupees)
+                        </span>{" "}
+                        - {routeCharge}
+                      </div>
+                    </div>
+                    <div id="cab_book_container_bookingDetails_showBox_footer">
+                      {isCabBooked
+                        ? "View your booked cab in MY Booked Cab section below"
+                        : "Please click on Book Cab to book your cab (This is the final step)"}
+                    </div>
+                  </>
+                ) : (
+                  <div id="no_cab_forThisFilter">
+                    Sorry Cab is Not Availaible , Try changing cab type or
+                    pickup time
+                  </div>
+                )}
               </div>
-              {cabAvailaible ? (
-                <>
-                  <div id="cab_book_container_bookingDetails_showBox_title">
-                    Here are the Cab details
-                  </div>
-                  <div id="cab_book_container_bookingDetails_showBox_details">
-                    {sourceValue.label}
-                    {destinationValue.label}
-                    {humanReadableDate}
-                    {humanReadableTime}
-                    Estimated time {routeTime}
-                    Charge for Cab(in rupees) {routeCharge}
-                  </div>
-                  <div id="cab_book_container_bookingDetails_showBox_footer">
-                    Please click on Book cab to book your cab (This is the final
-                    step)
-                  </div>
-                </>
-              ) : (
-                ""
-              )}
-            </div>
+            ) : (
+              ""
+            )
           ) : (
             ""
           )}
         </div>
       </div>
+      <CabRecord />
     </div>
   );
 };

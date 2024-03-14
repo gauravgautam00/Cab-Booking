@@ -23,7 +23,7 @@ export const dijkastra = (start, end) => {
     });
     let num = pq.shift();
 
-    if (Object.keys(num)[0] == end) {
+    if (Object.keys(num)[0] === end) {
       return Object.values(num)[0];
     }
     num = Object.keys(num)[0];

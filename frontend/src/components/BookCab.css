@@ -73,7 +73,7 @@
 .title_class {
   width: 33vw;
   font-size: larger;
-  background-color: #4e6ef2;
+  background-color: #1034a6;
   font-family: sans-serif;
   color: white;
   border-radius: 4px;
@@ -82,14 +82,16 @@
 }
 #cab_book_container_bookingDetails {
   display: flex;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
+  background-color: aliceblue;
+  /* margin-top: 2rem; */
+  /* margin-bottom: 3rem; */
   flex-wrap: wrap;
   justify-content: center;
 }
 #cab_book_container_bookingDetails_first {
   display: flex;
   width: 100vw;
+  margin-top: 2rem;
   gap: 8px;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -97,27 +99,28 @@
 #cab_book_container_bookingDetails_checkAvailaibility {
   cursor: pointer;
   font-size: larger;
-  background-color: #eeeeee;
+  background-color: #1034a6;
   width: 18rem;
   border-radius: 6px;
-
+  color: white;
   text-align: center;
   padding: 11px;
 }
 #cab_book_container_bookingDetails_checkAvailaibility:hover {
-  box-shadow: 0 0 6px 0 #c5c4c4;
+  box-shadow: 0 0 6px 0 #1034a6;
 }
 #cab_book_container_bookingDetails_bookCab {
   cursor: pointer;
   font-size: larger;
-  background-color: #eeeeee;
+  background-color: #1034a6;
   width: 18rem;
   border-radius: 6px;
+  color: white;
   text-align: center;
   padding: 11px;
 }
-#cab_book_container_bookingDetails_bookCab:hover {
-  box-shadow: 0 0 6px 0 #c5c4c4;
+.hover-shadow:hover {
+  box-shadow: 0 0 6px 0 #1034a6;
 }
 #cab_book_container_bookingDetails_second {
   display: flex;
@@ -125,5 +128,35 @@
   /* border: 1px solid; */
   width: 100vw;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   /* height: 3rem;*/
+}
+#cab_book_container_bookingDetails_showBox {
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+}
+#cab_book_container_bookingDetails_showBox_signal {
+  text-align: center;
+  font-size: large;
+  padding: 6px;
+  box-shadow: 0px 0px 6px 0px #c5c4c4 inset;
+  border-radius: 5px;
+  background-color: white;
+}
+#cab_book_container_bookingDetails_showBox_title {
+  margin-top: 1rem;
+}
+#cab_book_container_bookingDetails_showBox_footer {
+  margin-top: 1rem;
+  font-family: sans-serif;
+  color: #c5c4c4;
+  font-size: larger;
+}
+#no_cab_forThisFilter {
+  margin-top: 1rem;
+}
+.bookingDetails_details_class {
+  margin-top: 3px;
 }

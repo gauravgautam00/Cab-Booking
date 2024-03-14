@@ -1,0 +1,40 @@
+#cab_record_container {
+  display: flex;
+  margin-top: 2rem;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+#cab_record_container_title {
+  width: 100vw;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+#cab_record_container_first {
+  border: 1px solid;
+  /* text-align: center; */
+  border-radius: 3px;
+  width: 30rem;
+}
+#cab_record_container_first_title {
+  padding: 5px;
+  font-size: large;
+}
+#cab_record_container_first_description {
+  height: 19rem;
+  border: 1px solid;
+}
+#cab_record_container_second {
+  border: 1px solid;
+  border-radius: 4px;
+  width: 30rem;
+}
+#cab_record_container_second_title {
+  padding: 5px;
+  font-size: large;
+}
+#cab_record_container_second_description {
+  height: 8rem;
+  /* width: 142rem; */
+  border: 1px solid;
+}

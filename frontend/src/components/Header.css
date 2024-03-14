@@ -1,4 +1,25 @@
 #header_container {
-  height: 46px;
   border-bottom: 5px solid #eeeeee;
+  background-color: #1034a6;
+  justify-content: space-around;
+  color: white;
+  /* padding-top: 0rem; */
+  display: flex;
+  flex-wrap: wrap;
+}
+#header_container_title {
+  padding-top: 11px;
+  padding-bottom: 1rem;
+  /* margin-left: 3rem; */
+}
+
+#header_container_first {
+  cursor: pointer;
+  padding-top: 11px;
+  /* margin-left: 43rem; */
+}
+#header_container_second {
+  /* margin-left: 3rem; */
+  cursor: pointer;
+  padding-top: 11px;
 }

@@ -1,6 +1,6 @@
 const CabBooking = require("../models/CabBookingModel");
 
-const viewPreviousBookingController = async (req, res) => {
+const viewUpcomingBookingController = async (req, res) => {
   const { userEmail } = req.body;
 
   const prevBooking = [];
@@ -9,14 +9,12 @@ const viewPreviousBookingController = async (req, res) => {
   const curTimeMillis = new Date().getTime();
   console.log(curTimeMillis);
   allBooking.forEach((ele) => {
-    const endTimeMillis = ele.endTime.getTime();
-    console.log(endTimeMillis);
-    if (endTimeMillis < curTimeMillis) {
+    const startTimeMillis = ele.startTime.getTime();
+    console.log(startTimeMillis);
+    if (startTimeMillis > curTimeMillis) {
       prevBooking.push(ele);
     }
   });
-  res.status(200).json({
-    prevBooking,
-  });
+  res.status(200).json({ prevBooking });
 };
-module.exports = viewPreviousBookingController;
+module.exports = viewUpcomingBookingController;

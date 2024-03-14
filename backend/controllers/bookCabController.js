@@ -6,16 +6,15 @@ const bookCabController = async (req, res) => {
     destination,
     cabType,
     pickUpDate,
-    pickUpstartTime,
-    pickUpendTime,
+    pickUpStartTime,
+    pickUpEndTime,
     price,
   } = req.body;
 
   const dateString = pickUpDate; // MM/DD/YYYY format
-  const startTimeString = pickUpstartTime; // HH:MM format
-  const endTimeString = pickUpendTime; // HH:MM format
-
-  if (!pickUpDate || !pickUpstartTime || !pickUpendTime) {
+  const startTimeString = pickUpStartTime; // HH:MM format
+  const endTimeString = pickUpEndTime; // HH:MM format
+  if (!pickUpDate || !pickUpStartTime || !pickUpEndTime) {
     res.status(404).json({ message: "Either date or time not found" });
   }
   const [month, day, year] = dateString.split("-");
@@ -33,7 +32,7 @@ const bookCabController = async (req, res) => {
     userEmail,
     source,
     destination,
-    cabType,
+    cabType: cabType.value,
     startTime,
     endTime,
     price,
@@ -44,12 +43,10 @@ const bookCabController = async (req, res) => {
       .status(500)
       .json({ message: "Some error occurred while adding the new booking" });
   } else {
-    res
-      .status(200)
-      .json({
-        message: "Successfully booked the cab for this user",
-        newBooking,
-      });
+    res.status(200).json({
+      message: "Successfully booked the cab for this user",
+      newBooking,
+    });
   }
 };
 module.exports = bookCabController;
