@@ -9,8 +9,11 @@ connectDB();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "cool" });
-});
+const cabRoutes = require("./routes/cabRoutes");
+app.use("/cab", cabRoutes);
+
+const checkRoutes = require("./routes/checkRoutes");
+app.use("/check", checkRoutes);
+
 const PORT = process.env.PORT || 4500;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
