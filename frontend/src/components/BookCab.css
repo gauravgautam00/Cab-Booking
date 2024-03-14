@@ -1,0 +1,128 @@
+#cab_book_container_cabDetails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+  /* border: 1px solid; */
+}
+#cab_book_container_first {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+  border-bottom: 1px solid #eeeeee;
+  /* margin-bottom: 45px; */
+  margin-top: 2rem;
+  width: 100vw;
+}
+
+#cab_book_container_second {
+  width: 100vw;
+  display: flex;
+  margin-top: 2rem;
+  border-bottom: 1px solid #eeeeee;
+  /* margin-bottom: 1rem; */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#cab_book_container_third {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  display: flex;
+  border-bottom: 1px solid #eeeeee;
+  width: 100vw;
+  margin-top: 2rem;
+}
+
+.cab_book_container_chooseClass {
+  width: 18rem;
+  margin-bottom: 10px;
+  /* margin-left: 1rem; */
+}
+#date_container {
+  margin-bottom: 10px;
+}
+#time_container {
+  margin-bottom: 10px;
+}
+#cab_book_container_userDetails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 3rem;
+}
+#cab_book_container_userDetails_details_title {
+  font-size: 17px;
+  padding-top: 6px;
+}
+#cab_book_container_userDetails_details {
+  border-bottom: 1px solid #eeeeee;
+  width: 100vw;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#cab_book_container_userDetails_details_emailInput {
+  margin-bottom: 10px;
+  width: 18rem;
+  margin-left: 1rem;
+  margin-top: 4px;
+  height: 2rem;
+}
+.title_class {
+  width: 33vw;
+  font-size: larger;
+  background-color: #4e6ef2;
+  font-family: sans-serif;
+  color: white;
+  border-radius: 4px;
+  padding: 7px;
+  text-align: center;
+}
+#cab_book_container_bookingDetails {
+  display: flex;
+  margin-top: 2rem;
+  margin-bottom: 10rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#cab_book_container_bookingDetails_first {
+  display: flex;
+  width: 100vw;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+#cab_book_container_bookingDetails_checkAvailaibility {
+  cursor: pointer;
+  font-size: larger;
+  background-color: #eeeeee;
+  width: 18rem;
+  border-radius: 6px;
+
+  text-align: center;
+  padding: 11px;
+}
+#cab_book_container_bookingDetails_checkAvailaibility:hover {
+  box-shadow: 0 0 6px 0 #c5c4c4;
+}
+#cab_book_container_bookingDetails_bookCab {
+  cursor: pointer;
+  font-size: larger;
+  background-color: #eeeeee;
+  width: 18rem;
+  border-radius: 6px;
+  text-align: center;
+  padding: 11px;
+}
+#cab_book_container_bookingDetails_bookCab:hover {
+  box-shadow: 0 0 6px 0 #c5c4c4;
+}
+#cab_book_container_bookingDetails_second {
+  display: flex;
+  justify-content: center;
+  /* border: 1px solid; */
+  width: 100vw;
+  margin-top: 1rem;
+  /* height: 3rem;*/
+}
