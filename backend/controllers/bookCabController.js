@@ -46,13 +46,13 @@ const bookCabController = async (req, res) => {
     const transporter = nodemailer.createTransport({
       // Update the auth details as per your configuration
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env?.EMAIL_USER,
+        pass: process.env?.EMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env?.EMAIL_USER,
       to: userEmail,
       subject: "Cab Booking Confirmation",
       html: `
