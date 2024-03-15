@@ -1,7 +1,8 @@
-#footer_container {
-  background-color: #1034a6;
-  height: 10rem;
-  width: 100vw;
+.footer {
+  justify-content: space-evenly;
+  display: flex;
+  margin-top: 2rem;
   color: white;
-  /* margin-top: 1rem; */
+  background-color: #1034a6;
+  padding-bottom: 3rem;
 }

@@ -1,9 +1,9 @@
 #header_container {
-  border-bottom: 5px solid #eeeeee;
-  background-color: #1034a6;
-  justify-content: space-around;
-  color: white;
-  /* padding-top: 0rem; */
+  border-bottom: 3px solid #1034a6;
+  background-color: aliceblue;
+  justify-content: space-evenly;
+  color: #1034a6;
+  font-weight: 600;
   display: flex;
   flex-wrap: wrap;
 }

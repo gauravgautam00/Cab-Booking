@@ -15,5 +15,8 @@ app.use("/cab", cabRoutes);
 const checkRoutes = require("./routes/checkRoutes");
 app.use("/check", checkRoutes);
 
+const cabTypeRoutes = require("./routes/cabTypeRoutes");
+app.use("/cabType", cabTypeRoutes);
+
 const PORT = process.env.PORT || 4500;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

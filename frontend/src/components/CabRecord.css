@@ -18,13 +18,13 @@
   margin-bottom: 1rem;
 }
 .cab_record_container_titleClass {
-  padding: 5px;
+  padding: 3px;
   background-color: aliceblue;
-  font-size: larger;
+  font-size: large;
   border-top-left-radius: 5px;
-  padding-top: 10px;
-  border: 2px solid #1034a6;
-  padding-bottom: 10px;
+  padding-top: 7px;
+  border: 1px solid #1034a6;
+  padding-bottom: 5px;
   position: relative;
   border-top-right-radius: 5px;
 }
@@ -156,7 +156,7 @@
 }
 #next_bookingData_container_editContainer_Button {
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: 26px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

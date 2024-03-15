@@ -1,5 +1,5 @@
 import "./BookCab.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -7,6 +7,8 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import Select from "react-select";
 import dayjs from "dayjs";
 import { dijkastra } from "../utilities/dijkastra";
+import { v4 as uuidv4 } from "uuid";
+
 import CabRecord from "./CabRecord";
 const BookCab = () => {
   const today = dayjs();
@@ -24,6 +26,8 @@ const BookCab = () => {
   const [cabAvailable, setCabAvailable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isCabBooked, setIsCabBooked] = useState(false);
+  const [fetchedCabTypeOptions, setFetchedCabTypeOptions] = useState([]);
+
   //details for booking
   //details for booking
   //details for booking
@@ -64,13 +68,38 @@ const BookCab = () => {
     { label: "Destination - E" },
     { label: "Destination - F" },
   ];
-  const cabTypeOptions = [
-    { label: "Sedan (Fair - 100/minute)", value: "0", charge: 100 },
-    { label: "SUV (Fair - 120/minute)", value: "1", charge: 120 },
-    { label: "Van (Fair - 140/minute)", value: "2", charge: 140 },
-    { label: "HatchBack (Fair - 80/minute)", value: "3", charge: 80 },
-    { label: "Coupe (Fair - 200/minute)", value: "4", charge: 200 },
-  ];
+  // const cabTypeOptions = [
+  //   { label: "Sedan (Fair - 100/minute)", value: "0", charge: 100 },
+  //   { label: "SUV (Fair - 120/minute)", value: "1", charge: 120 },
+  //   { label: "Van (Fair - 140/minute)", value: "2", charge: 140 },
+  //   { label: "HatchBack (Fair - 80/minute)", value: "3", charge: 80 },
+  //   { label: "Coupe (Fair - 200/minute)", value: "4", charge: 200 },
+  // ];
+  let cabTypeOptions = [];
+  useEffect(() => {
+    fetch("http://localhost:4500/cabType/getTypes")
+      .then((res) => res.json())
+      .then((response) => {
+        // const optionArr=[];
+
+        cabTypeOptions = [];
+        const tempCabType = [];
+        response.cabTypeOptions.map((ele) => {
+          cabTypeOptions.push({
+            label: ele.label,
+            value: ele.value,
+            charge: ele.charge,
+          });
+          tempCabType.push({
+            label: ele.label + " Fair(" + ele.charge + "/minutes )",
+            value: ele.value,
+            charge: ele.charge,
+          });
+        });
+        setFetchedCabTypeOptions(tempCabType);
+        console.log("response fetched caboptions", cabTypeOptions);
+      });
+  }, []);
   const validateEmail = (email) => {
     // Regular expression for email validation
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -212,6 +241,11 @@ const BookCab = () => {
       alert("Please enter suitable email");
       return false;
     }
+
+    if (isCabBooked) {
+      alert("This cab just got booked by you");
+      return;
+    }
     let val = dijkastra(
       sourceValue.label.substring(sourceValue.label.length - 1),
       destinationValue.label.substring(destinationValue.label.length - 1)
@@ -261,6 +295,7 @@ const BookCab = () => {
       })
       .then((response) => {
         setIsCabBooked(true);
+        // setClickedAvailableButton(false);
         console.log(response);
       })
       .catch((err) => {
@@ -311,7 +346,7 @@ const BookCab = () => {
               <Select
                 value={cabTypeValue}
                 onChange={handleCabTypeChange}
-                options={cabTypeOptions}
+                options={fetchedCabTypeOptions}
                 placeholder="Select Cab Type"
                 isMulti={false} // Set to false to allow only one option to be selected
                 className="cab_book_container_cabTypeSelect"
@@ -474,7 +509,7 @@ const BookCab = () => {
                     </div>
                     <div id="cab_book_container_bookingDetails_showBox_footer">
                       {isCabBooked
-                        ? "View your booked cab in MY Booked Cab section below"
+                        ? "View your booked cab in Upcoming Cab Reservation section below"
                         : "Please click on Book Cab to book your cab (This is the final step)"}
                     </div>
                   </>

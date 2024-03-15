@@ -1,6 +1,6 @@
 import "./CabRecord.css";
 import React from "react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { dijkastra } from "../utilities/dijkastra";
 
 import { v4 as uuidv4 } from "uuid";
@@ -26,6 +26,8 @@ const CabRecord = () => {
   const [availabilityClicked, setAvailabilityClicked] = useState();
   const [loadingUpcomingReservations, setLoadingUpcomingReservations] =
     useState(false);
+  const [fetchedCabTypeOptions, setFetchedCabTypeOptions] = useState([]);
+
   const inputElementForPastBooking = useRef(null);
   const inputElementForFutureBooking = useRef(null);
   const editContainer = useRef(null);
@@ -36,13 +38,13 @@ const CabRecord = () => {
     setCabTypeValue(value);
   };
 
-  const cabTypeOptions = [
-    { label: "Sedan (Fair - 100/minute)", value: "0", charge: 100 },
-    { label: "SUV (Fair - 120/minute)", value: "1", charge: 120 },
-    { label: "Van (Fair - 140/minute)", value: "2", charge: 140 },
-    { label: "HatchBack (Fair - 80/minute)", value: "3", charge: 80 },
-    { label: "Coupe (Fair - 200/minute)", value: "4", charge: 200 },
-  ];
+  // const cabTypeOptions = [
+  //   { label: "Sedan (Fair - 100/minute)", value: "0", charge: 100 },
+  //   { label: "SUV (Fair - 120/minute)", value: "1", charge: 120 },
+  //   { label: "Van (Fair - 140/minute)", value: "2", charge: 140 },
+  //   { label: "HatchBack (Fair - 80/minute)", value: "3", charge: 80 },
+  //   { label: "Coupe (Fair - 200/minute)", value: "4", charge: 200 },
+  // ];
   const sourceOptions = [
     { label: "Source - A" },
     { label: "Source - B" },
@@ -318,7 +320,7 @@ const CabRecord = () => {
       endTime: endTime.substring(0, endTime.length - 3),
       cabType: cabTypeValue
         ? cabTypeValue
-        : cabTypeOptions.filter(
+        : fetchedCabTypeOptions.filter(
             (ele) => ele.value == editContainerDetails.cabType
           )[0],
       val,
@@ -427,6 +429,25 @@ const CabRecord = () => {
     }
     checkAvailability();
   };
+
+  useEffect(() => {
+    fetch("http://localhost:4500/cabType/getTypes")
+      .then((res) => res.json())
+      .then((response) => {
+        // const optionArr=[];
+
+        const tempCabType = [];
+        response.cabTypeOptions.map((ele) => {
+          tempCabType.push({
+            label: ele.label + " Fair(" + ele.charge + "/minutes )",
+            value: ele.value,
+            charge: ele.charge,
+          });
+        });
+        setFetchedCabTypeOptions(tempCabType);
+        // console.log("response fetched caboptions", cabTypeOptions);
+      });
+  }, [selectedEditContainer]);
   return (
     <div id="cab_record_container">
       <div id="cab_record_container_title">Cab Records</div>
@@ -503,7 +524,7 @@ const CabRecord = () => {
                         </div>
                         <div className="resultedData_child_marginClass">
                           <strong>Cab Type:</strong>
-                          {cabTypeOptions.find(
+                          {fetchedCabTypeOptions.find(
                             (ele) => ele.value == reservation.cabType
                           )?.label || "Unknown Cab Type"}
                         </div>
@@ -602,7 +623,7 @@ const CabRecord = () => {
                               </div>
                               <div className="resultedData_child_marginClass">
                                 <strong>Cab Type:</strong>
-                                {cabTypeOptions.find(
+                                {fetchedCabTypeOptions.find(
                                   (ele) => ele.value == reservation.cabType
                                 )?.label || "Unknown Cab Type"}
                               </div>
@@ -719,7 +740,7 @@ const CabRecord = () => {
                                   <Select
                                     value={cabTypeValue}
                                     onChange={handleCabTypeChange}
-                                    options={cabTypeOptions}
+                                    options={fetchedCabTypeOptions}
                                     placeholder="Select Cab Type"
                                     isMulti={false} // Set to false to allow only one option to be selected
                                     className="cab_book_container_cabTypeSelect"
