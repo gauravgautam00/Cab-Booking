@@ -105,7 +105,7 @@ const CabRecord = () => {
       }
 
       fetch(
-        `http://localhost:4500/cab/previousBooking?userEmail=${encodeURIComponent(
+        `https://cab-booking-1.onrender.com/cab/previousBooking?userEmail=${encodeURIComponent(
           userEmail
         )}`
       )
@@ -148,7 +148,7 @@ const CabRecord = () => {
         return;
       }
       fetch(
-        `http://localhost:4500/cab/upcomingBooking?userEmail=${encodeURIComponent(
+        `https://cab-booking-1.onrender.com/cab/upcomingBooking?userEmail=${encodeURIComponent(
           userEmail
         )}`
       )
@@ -187,7 +187,7 @@ const CabRecord = () => {
   };
 
   const handleDeleteBooking = (id, userEmail) => {
-    fetch(`http://localhost:4500/cab/deleteBooking/${id}`, {
+    fetch(`https://cab-booking-1.onrender.com/cab/deleteBooking/${id}`, {
       method: "DELETE",
     })
       .then(async (res) => {
@@ -328,7 +328,7 @@ const CabRecord = () => {
     };
     console.log("toUpdate data in check availability", toUpdateData);
 
-    fetch("http://localhost:4500/check/availability", {
+    fetch("https://cab-booking-1.onrender.com/check/availability", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -376,7 +376,7 @@ const CabRecord = () => {
       bodyData
     );
 
-    fetch(`http://localhost:4500/cab/update/${jsonData.id}`, {
+    fetch(`https://cab-booking-1.onrender.com/cab/update/${jsonData.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -431,7 +431,7 @@ const CabRecord = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:4500/cabType/getTypes")
+    fetch("https://cab-booking-1.onrender.com/cabType/getTypes")
       .then((res) => res.json())
       .then((response) => {
         // const optionArr=[];

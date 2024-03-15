@@ -77,7 +77,7 @@ const BookCab = () => {
   // ];
   let cabTypeOptions = [];
   useEffect(() => {
-    fetch("http://localhost:4500/cabType/getTypes")
+    fetch("https://cab-booking-1.onrender.com/cabType/getTypes")
       .then((res) => res.json())
       .then((response) => {
         // const optionArr=[];
@@ -197,7 +197,7 @@ const BookCab = () => {
       pickUpEndTime: endTime.substring(0, endTime.length - 3),
     };
 
-    fetch("http://localhost:4500/check/availability", {
+    fetch("https://cab-booking-1.onrender.com/check/availability", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -276,7 +276,7 @@ const BookCab = () => {
     };
     console.log("book cab body data", bodyData);
 
-    fetch("http://localhost:4500/cab/book", {
+    fetch("https://cab-booking-1.onrender.com/cab/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
