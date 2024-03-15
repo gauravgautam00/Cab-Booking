@@ -43,40 +43,6 @@ const bookCabController = async (req, res) => {
       .status(500)
       .json({ message: "Some error occurred while adding the new booking" });
   } else {
-    const transporter = nodemailer.createTransport({
-      // Update the auth details as per your configuration
-      auth: {
-        user: process.env?.EMAIL_USER,
-        pass: process.env?.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env?.EMAIL_USER,
-      to: userEmail,
-      subject: "Cab Booking Confirmation",
-      html: `
-        <p>Your cab booking has been confirmed!</p>
-        <p><strong>Details:</strong></p>
-        <ul>
-          <li><strong>Source:</strong> ${source}</li>
-          <li><strong>Destination:</strong> ${destination}</li>
-          <li><strong>Start Time:</strong> ${startTime.toLocaleString()}</li>
-          <li><strong>End Time:</strong> ${endTime.toLocaleString()}</li>
-          <li><strong>Price:</strong> ${price}</li>
-          <li><strong>Cab Type:</strong> ${cabType.label}</li>
-        </ul>
-      `,
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
-
     res.status(200).json({
       message: "Successfully booked the cab for this user",
       newBooking,
