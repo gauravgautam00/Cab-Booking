@@ -21,7 +21,7 @@ const BookCab = () => {
   const [clickedAvailableButton, setClickedAvailableButton] = useState(false);
   const [humanReadableDate, setHumanReadableDate] = useState();
   const [humanReadableTime, setHumanReadableTime] = useState();
-  const [cabAvailaible, setCabAvailaible] = useState(false);
+  const [cabAvailable, setCabAvailable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isCabBooked, setIsCabBooked] = useState(false);
   //details for booking
@@ -39,6 +39,7 @@ const BookCab = () => {
     setDestinationValue(value);
   };
   const handleCabTypeChange = (value) => {
+    console.log(value);
     setClickedAvailableButton(false);
     setCabTypeValue(value);
   };
@@ -67,8 +68,8 @@ const BookCab = () => {
     { label: "Sedan (Fair - 100/minute)", value: "0", charge: 100 },
     { label: "SUV (Fair - 120/minute)", value: "1", charge: 120 },
     { label: "Van (Fair - 140/minute)", value: "2", charge: 140 },
-    { label: "HatchBack (Fair - 80/minute)", value: "4", charge: 80 },
-    { label: "Coupe (Fair - 200/minute)", value: "5", charge: 200 },
+    { label: "HatchBack (Fair - 80/minute)", value: "3", charge: 80 },
+    { label: "Coupe (Fair - 200/minute)", value: "4", charge: 200 },
   ];
   const validateEmail = (email) => {
     // Regular expression for email validation
@@ -140,6 +141,7 @@ const BookCab = () => {
       destinationValue,
       cabTypeValue
     );
+    console.log(dateValue);
 
     if (!validationPassed) return false;
 
@@ -188,22 +190,24 @@ const BookCab = () => {
         console.log("Response from check availability", response);
         setHumanReadableDate(date);
         setHumanReadableTime(startTime);
-        setCabAvailaible(true);
+        setCabAvailable(true);
         setRouteTime(val);
         setRouteCharge(val * cabTypeValue.charge);
         setClickedAvailableButton(true);
         setIsCabBooked(false);
+        console.log("is cab available useState", cabAvailable);
       })
       .catch((err) => {
         setLoading(false);
         setIsCabBooked(false);
         setClickedAvailableButton(true);
-        setCabAvailaible(false);
+        setCabAvailable(false);
         console.log("Cab is not available", err.message);
+        console.log("is cab available useState", cabAvailable);
       });
   };
   const bookCab = () => {
-    if (!clickedAvailableButton) return false;
+    if (!clickedAvailableButton || !cabAvailable) return false;
     if (!userEmailValue || !validateEmail(userEmailValue)) {
       alert("Please enter suitable email");
       return false;
@@ -234,8 +238,9 @@ const BookCab = () => {
       destination: destinationValue.label.substring(
         destinationValue.label.length - 1
       ),
+      price: val * cabTypeValue.charge,
     };
-    // console.log(bodyData);
+    console.log("book cab body data", bodyData);
 
     fetch("http://localhost:4500/cab/book", {
       method: "POST",
@@ -282,9 +287,6 @@ const BookCab = () => {
                 placeholder="Select Source"
                 isMulti={false} // Set to false to allow only one option to be selected
                 className="cab_book_container_sourceSelect"
-                MenuProps={{
-                  style: { zIndex: 9999 }, // Set the desired zIndex for the dropdown menu
-                }}
               />
             </div>
             <div
@@ -338,7 +340,6 @@ const BookCab = () => {
                     setClickedAvailableButton(false);
                     setTimeValue(newValue);
                   }}
-                  // label="Select Pickup Time"
                 />
               </div>
             </LocalizationProvider>
@@ -377,7 +378,10 @@ const BookCab = () => {
                 : "Please check availability first"
             }
             style={{
-              cursor: clickedAvailableButton ? "pointer" : "not-allowed",
+              cursor:
+                clickedAvailableButton && cabAvailable
+                  ? "pointer"
+                  : "not-allowed",
             }}
             className={clickedAvailableButton ? "hover-shadow" : ""}
             onClick={bookCab}
@@ -392,11 +396,11 @@ const BookCab = () => {
                 <div id="cab_book_container_bookingDetails_showBox_signal">
                   {isCabBooked
                     ? "Success , Cab got booked for you"
-                    : cabAvailaible
+                    : cabAvailable
                     ? "Availaible"
                     : "Not Available"}
                 </div>
-                {cabAvailaible ? (
+                {cabAvailable ? (
                   <>
                     <div id="cab_book_container_bookingDetails_showBox_title">
                       Here are the Cab details
@@ -434,10 +438,10 @@ const BookCab = () => {
                         className="bookingDetails_details_class"
                       >
                         <span style={{ fontWeight: "700" }}> PickUp Date </span>
-                        {dateValue.$D +
-                          "-" +
-                          dateValue.$M +
+                        {dateValue.$M +
                           1 +
+                          "-" +
+                          dateValue.$D +
                           "-" +
                           dateValue.$y}
                       </div>

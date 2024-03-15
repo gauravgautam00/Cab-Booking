@@ -35,7 +35,7 @@ const bookCabController = async (req, res) => {
     cabType: cabType.value,
     startTime,
     endTime,
-    price,
+    price: price,
   });
 
   if (!newBooking) {
